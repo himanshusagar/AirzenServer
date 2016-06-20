@@ -4,6 +4,8 @@
 var express = require('express');
 var router = express.Router();
 
+var path = require('path');
+var databaseJS = require( path.join( path.dirname(  path.dirname(__dirname ))  ,"/database/Database"));
 
 
 
@@ -27,7 +29,7 @@ router.post('/', function (req, res) {
     reqData["humidity"]=req.body.humidity;
     reqData["temperature"]=req.body.temperature;
     reqData["location"] = req.body.location;
-   // dbInsertLatest(reqData);
+    databaseJS.dbInsertLatest(reqData);
     console.log("---------------------------------------------");
     console.log(reqData);
     console.log("---------------------------------------------");

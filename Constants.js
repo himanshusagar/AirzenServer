@@ -14,6 +14,20 @@ GAS_ARRAY[5]= 'carbonMonoxide';
 //GAS_ARRAY[6] = 'temperature' ;
 //GAS_ARRAY[7] = 'humidity' ;
 
+
+var JSON_ARRAY = new Array();
+JSON_ARRAY['0'] = 'aqi';
+JSON_ARRAY[1] = 'nitrogenDioxide';
+JSON_ARRAY[2] = 'ozone' ;
+JSON_ARRAY[3] ='pm25';
+JSON_ARRAY[4] ='pm10';
+JSON_ARRAY[5]= 'carbonMonoxide';
+JSON_ARRAY[6] = 'temperature' ;
+JSON_ARRAY[7] = 'humidity' ;
+
+
+
+
 module.exports =
 {
     PAST_HOUR_ENTRIES : 5,
@@ -35,5 +49,8 @@ module.exports =
     OZONE : "ozone",
     TEMP : "temperature",
     HUMIDITY : "humidity",
-    GAS_ARRAY : GAS_ARRAY
+    healthRisks : "healthRisks",
+    suggestions : "suggestions",
+    GAS_ARRAY : GAS_ARRAY,
+    JSON_ARRAY : JSON_ARRAY
 }

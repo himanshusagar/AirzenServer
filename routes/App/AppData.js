@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 
-var sJ = require( path.join( path.dirname(  path.dirname(__dirname ))  ,"/database/ServeJson"));
+var sJ = require( path.join( path.dirname(  path.dirname(__dirname ))  ,"/database/ServeJSON"));
 
 
 // App Data

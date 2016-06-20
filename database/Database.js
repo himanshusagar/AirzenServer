@@ -54,7 +54,7 @@ var getInferences = function(deviceId)
     return inferences;
 }
 
-function registerUser(deviceid,passkey,email)
+function registerUser(deviceid,passkey,email ,callback)
 {
 
 
@@ -73,26 +73,39 @@ function registerUser(deviceid,passkey,email)
         if(err)
         {
             console.log("ERROR" + '\n' + err);
-            json = JSON.stringify({"response":"Cannot read table registrations"});
-            //callback(null,json);
+            json = JSON.stringify({"response" : "false" ,"status":"Cannot read table registrations"});
+            callback(null,json);
         }
         else if(obj == null)
         {
             toBeInserted.save( function (err) {
 
                 if (err)
+                {
+                    json = JSON.stringify({"response" : "false" ,"status":"Save Error"});
+                    callback(null,json);
+
                     console.log('fail to save');
+                }
                 else
                 {
-                    console.log("User Registered");
+
                     //ext();
+                    json = JSON.stringify({"response":"true" , "status" : "User Registered"});
+                    callback(null,json);
+
                 }
+                
+
             })
         }
         else
         {
+            json = JSON.stringify({"response" : "false" ,"status":"Already registered with a device"});
 
-            console.log("Already registered with a device");
+            callback(null,json);
+
+            
 
         }
 
@@ -215,6 +228,12 @@ reqData["aqi"] = Math.max.apply(Math,maxAqi);
 
 
 
-dbInsertLatest(reqData);
+//dbInsertLatest(reqData);
 
 //closeDB.disconnect();
+
+
+module.exports = {
+    registerUser : registerUser,
+    dbInsertLatest : dbInsertLatest
+}
