@@ -13,14 +13,20 @@ var hRS = require(path.join (__dirname , "/HealthRiskSugg"));
 
 
 var gasSpecific = "gasSpecific";
-var initi = require(path.join( __dirname , 'Init'));
 
 
 var healthConditions = null;
 var AGE = null;
 
-var handleError = function () {
+var handleError = function (gasInfo , inferences, callback)
+{
     console.log("Error");
+    json = JSON.stringify({"inferences": inferences, "gasSpecific": gasInfo});
+    console.log('JSON-result:', json);
+    callback(null, json);
+
+
+
 }
 
 
@@ -30,14 +36,14 @@ var getGasSpecificObj = function()
     var xx = {};
     xx['gasType'] = "g";
     xx[constants.GAS_AQI] = 0;
-    xx[constants.pastDay] = [];
-    xx[constants.pastWeek] = [];
-    xx[constants.pastMonth] = [];
-    xx[constants.monthly] = [];
-    xx[constants.healthRisks] = [];
-    xx[constants.suggestions] = [];
-    
-    
+    xx[constants.pastDay] = new Array();
+    xx[constants.pastWeek] = new Array();
+    xx[constants.pastMonth] = new Array();
+    xx[constants.monthly] = new Array();
+    xx[constants.healthRisks] = new Array();
+    xx[constants.suggestions] = new Array();
+
+
     return xx;
 }
 
@@ -80,7 +86,7 @@ var QueryModels = function (Model , ROW_TYPE, index ,gasInfo , regId ,gasType,ca
         }
         else
         {
-            handleError()
+            handleError(gasInfo , [], callback);
         }
         if((index == constants.GAS_ARRAY.length - 1) && Model == schemaModule.monthlyModel)
         {
@@ -99,7 +105,7 @@ var QueryModels = function (Model , ROW_TYPE, index ,gasInfo , regId ,gasType,ca
 
                 }
                 var gasSequence = ["aqi","nitrogenDioxide","ozone","pm25","pm10","carbonMonoxide","temperature","humidity"];
-
+             
                 var suggestions = hRS.getSuggestions(healthConditions, AGE, gasSequence , aqiValues);
 
                 for (var i = 0; i < gasInfo.length; i++) 
@@ -141,7 +147,7 @@ var getAppJsonHelp = function (gasType,index,gasInfo ,regId,callback)
         else
         {
 
-            handleError()
+            handleError(gasInfo , [],callback);
 
         }
     })
@@ -162,13 +168,10 @@ var getAppJsonHelp = function (gasType,index,gasInfo ,regId,callback)
 
 }
 
-var getAppJson = function (deviceId , healthCond , age, callback) {
+var getAppJson = function (deviceId , healthCond , age, callback)
+{
     var gasInfo = initialise();
 
-    
-    
-    
-    
     if (healthConditions == null && AGE==null)
     {
         healthConditions = healthCond;
@@ -176,43 +179,23 @@ var getAppJson = function (deviceId , healthCond , age, callback) {
         console.log("initialised")
     }
 
-
-
-
-
     schemaModule.registrationModel.findOne( {deviceId : deviceId} , function (err,Object)
     {
-        if(err || Object==null)
-            handleError();
+        if (err || Object == null)
+            handleError(gasInfo  , [],callback);
         else
         {
             var regId = Object.id;
-
-
-
             for(var i = 0 ; i < constants.GAS_ARRAY.length ; i++)
             {
                 getAppJsonHelp(constants.GAS_ARRAY[i] , i  , gasInfo , regId,callback);
 
             }
-
-
-
-
-
-
         }
 
-       
 
     })
     
-    
-
-
-
-
-
 }
 
 var print = function (gasInfo)

@@ -13,6 +13,18 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var constants = require( path.join( path.dirname( path.dirname(__dirname)) , '/Constants') );
 
+var DevicesSchema = new Schema({
+
+    passKey : String,
+    deviceId : {type : String , unique:true}
+})
+
+var UsersSchema = new Schema({
+
+    token : String,
+    deviceId : String,
+    identifier : String
+})
 
 var InferencesSchema = new Schema({
 
@@ -92,9 +104,10 @@ var gasSpecificSchema = new Schema({
 var registrationSchema = new Schema({
 
     deviceId : { type:String , unique:true },
-    passKey : String,
+    token : { type:String , unique:true },
     emailId : String,
-    regDate : Date
+    regDate : Date,
+    
 
 
 
@@ -120,7 +133,8 @@ var pastDayModel = mongoose.model('pastDay' , pastDaySchema , constants.pastDay)
 var pastWeekModel = mongoose.model('pastWeek' , pastWeekSchema , constants.pastWeek);
 var pastMonthModel = mongoose.model('pastMonth' , pastMonthSchema , constants.pastMonth);
 var monthlyModel = mongoose.model('monthly' , monthlySchema ,constants.monthly);
-
+var devicesModel  = mongoose.model('devices' , DevicesSchema , constants.devices);
+var usersModel = mongoose.model('user' , UsersSchema , constants.users);
 
 
 registrationSchema.post('save' , function (doc)
@@ -502,7 +516,9 @@ module.exports = {
     pastDayModel : pastDayModel,
     pastWeekModel : pastWeekModel,
     pastMonthModel : pastMonthModel,
-    monthlyModel : monthlyModel
+    monthlyModel : monthlyModel,
+    devicesModel : devicesModel,
+    usersModel : usersModel
 
 }
 

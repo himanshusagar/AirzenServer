@@ -11,6 +11,7 @@ var databaseJS = require( path.join( path.dirname(  path.dirname(__dirname ))  ,
 
 
 
+
 router.post('/', function (req, res) {
     
     console.log(" app device Post");

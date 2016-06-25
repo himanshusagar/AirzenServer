@@ -4,9 +4,8 @@
 
 var path = require('path');
 var mongoose = require('mongoose');
-var initi = require(path.join( __dirname , 'Init'));
 var tC = require( path.join( __dirname ,'/TimeCal'));
-
+var U_Token = require( path.join( path.dirname(__dirname) , "auth/UniqueToken"));
 
 //own module
 var schemaModule = require(  path.join( __dirname ,'/schema/SchemaModule'));
@@ -54,66 +53,6 @@ var getInferences = function(deviceId)
     return inferences;
 }
 
-function registerUser(deviceid,passkey,email ,callback)
-{
-
-
-    var regModel = schemaModule.registrationModel;
-
-    var toBeInserted = new regModel({
-        emailId : email,
-        passKey : passkey,
-        deviceId : deviceid,
-        regDate : new Date()
-    })
-
-
-    regModel.findOne( { deviceId : deviceid}, function (err , obj) {
-
-        if(err)
-        {
-            console.log("ERROR" + '\n' + err);
-            json = JSON.stringify({"response" : "false" ,"status":"Cannot read table registrations"});
-            callback(null,json);
-        }
-        else if(obj == null)
-        {
-            toBeInserted.save( function (err) {
-
-                if (err)
-                {
-                    json = JSON.stringify({"response" : "false" ,"status":"Save Error"});
-                    callback(null,json);
-
-                    console.log('fail to save');
-                }
-                else
-                {
-
-                    //ext();
-                    json = JSON.stringify({"response":"true" , "status" : "User Registered"});
-                    callback(null,json);
-
-                }
-                
-
-            })
-        }
-        else
-        {
-            json = JSON.stringify({"response" : "false" ,"status":"Already registered with a device"});
-
-            callback(null,json);
-
-            
-
-        }
-
-
-    } )
-
-
-}
 
 var dbSpecificInsert = function (dataValue , TYPE_OF_GAS, regID)
 {
@@ -233,7 +172,121 @@ reqData["aqi"] = Math.max.apply(Math,maxAqi);
 //closeDB.disconnect();
 
 
-module.exports = {
+function registerUser(deviceId,passKey,email ,toBeReturned ,callback)
+{
+
+
+    var regModel = schemaModule.registrationModel;
+
+    var myToken = U_Token.generateToken();
+    
+    
+    var toBeInserted = new regModel({
+        emailId : email,
+        token : myToken,
+        deviceId : deviceId,
+        regDate : new Date()
+    })
+
+
+    regModel.findOne( { deviceId : deviceId , passKey : passKey}, function (err , obj) {
+
+        if(err)
+        {
+            console.log("ERROR" + '\n' + err);
+            toBeReturned.response = false;
+            toBeReturned.status = "Cannot read table registrations";
+
+            json = JSON.stringify(toBeReturned);
+            callback(null,json);
+        }
+        else if(obj == null)
+        {
+            toBeInserted.save( function (err) {
+
+                if (err)
+                {
+                    toBeReturned.response = false;
+                    toBeReturned.status = "Save Error";
+                    json = JSON.stringify(toBeReturned);
+                    callback(null ,json);
+                }
+                else
+                {
+
+                    //ext();
+                    toBeReturned.response = true;
+                    toBeReturned.status = "User Registered";
+                    toBeReturned.token = myToken;
+                    json = JSON.stringify(toBeReturned);
+                    callback(null,json);
+
+                }
+
+
+            })
+        }
+        else
+        {
+
+            toBeReturned.response = false;
+            toBeReturned.status = "Device already registered with App";
+            toBeReturned.token = "Not Available";
+
+            json = JSON.stringify(toBeReturned);
+
+            callback(null,json);
+
+
+
+        }
+
+
+    } )
+
+
+}
+
+
+var CheckDeviceId_PassKey = function ( deviceId , passKey , identifier , callback)
+{
+    schemaModule.devicesModel.findOne( {deviceId : deviceId , passKey:passKey } , function (err , DeviceObj)
+    {
+        var toBeReturned = { pairFound : false , token : null ,response : false , status : null,deviceId : null , passKey:null };
+
+
+        if(DeviceObj!=null && !err)
+        {
+
+            toBeReturned.pairFound = true;
+            registerUser(deviceId , passKey ,identifier ,toBeReturned ,callback)
+
+        }
+        else
+        {
+
+
+            console.log('inside');
+            console.log(err + DeviceObj);
+
+            json = JSON.stringify(toBeReturned);
+            callback(null, json);
+
+
+        }
+
+    })
+
+
+}
+
+
+
+
+module.exports = 
+{
     registerUser : registerUser,
-    dbInsertLatest : dbInsertLatest
+    dbInsertLatest : dbInsertLatest,
+    CheckDeviceId_PassKey : CheckDeviceId_PassKey
+   
 }

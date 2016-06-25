@@ -40,6 +40,8 @@ module.exports =
     pastDay : 'pastDay',
     pastMonth : 'pastMonth',
     monthly : 'monthly',
+    devices : "devices",
+    users : "users",
     registrationsTableName : 'registrations',
     GAS_AQI : "aqi",
     CARBON_MX : "carbonMonoxide", 
@@ -52,5 +54,6 @@ module.exports =
     healthRisks : "healthRisks",
     suggestions : "suggestions",
     GAS_ARRAY : GAS_ARRAY,
-    JSON_ARRAY : JSON_ARRAY
+    JSON_ARRAY : JSON_ARRAY,
+    signUpMessage : "signUpMessage"
 }

@@ -3,11 +3,13 @@ var router = express.Router();
 var path = require('path');
 
 var sJ = require( path.join( path.dirname(  path.dirname(__dirname ))  ,"/database/ServeJSON"));
+var DBAuth = require( path.join( path.dirname(  path.dirname(__dirname ))  ,"/database/DBAuth"));
+
 
 
 // App Data
 
-router.post("/", function(req, res){
+router.post("/", DBAuth.ensureAuthenticated, function(req, res){
     
     console.log('appData POst');
     
@@ -18,7 +20,7 @@ router.post("/", function(req, res){
 
     console.log(reqData);
 
-    sJ.getAppJson("A123",reqData["defectPreferences"],reqData["age"] ,function (err , result) 
+    sJ.getAppJson("A444",reqData["defectPreferences"],reqData["age"] ,function (err , result)
     {
         res.writeHead(200, {
             'Content-Type' : 'x-application/json'
