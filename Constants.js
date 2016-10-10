@@ -55,5 +55,6 @@ module.exports =
     suggestions : "suggestions",
     GAS_ARRAY : GAS_ARRAY,
     JSON_ARRAY : JSON_ARRAY,
-    signUpMessage : "signUpMessage"
+    signUpMessage : "signUpMessage",
+    dataDump : "dataDump"
 }

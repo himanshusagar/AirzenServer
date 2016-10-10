@@ -115,6 +115,48 @@ var dbSpecificInsert = function (dataValue , TYPE_OF_GAS, regID)
 
 }
 
+var addToDump = function (data)
+{
+    var deviceId = data["deviceId"];
+    var nitrogenDioxide = data["nitrogenDioxide"];
+    var ozone = data["ozone"];
+    var pm25 = data["pm25"];
+    var pm10 = data["pm10"];
+    var carbonMonoxide = data["carbonMonoxide"];
+    var humidity = data["humidity"];
+    var temperature = data["temperature"]; //Temp between -20 to 55
+    var aqi = Math.max(nitrogenDioxide, ozone, pm10, pm25, carbonMonoxide);
+    var location = data["location"];
+    data["aqi"] = aqi;
+
+    date = (new Date()).toISOString();
+
+    var toBeInserted = new schemaModule.dataDumpModel({
+        deviceId : deviceId,
+        nitrogenDioxide : nitrogenDioxide,
+        ozone : ozone,
+        pm25 : pm25,
+        pm10 : pm10,
+        carbonMonoxide : carbonMonoxide,
+        humidity : humidity,
+        temperature : temperature,
+        aqi : aqi,
+        location : location,
+        date : date
+
+    })
+
+    toBeInserted.save( function (err) {
+
+        if (err) {
+            console.log("Problem in Saving to dataDump");
+        }
+
+        else {
+            console.log(toBeInserted);
+        }
+    })
+}
 
 var dbInsertLatest = function(data)
 {
@@ -287,6 +329,7 @@ module.exports =
 {
     registerUser : registerUser,
     dbInsertLatest : dbInsertLatest,
-    CheckDeviceId_PassKey : CheckDeviceId_PassKey
+    CheckDeviceId_PassKey : CheckDeviceId_PassKey,
+    addToDump : addToDump
    
 }

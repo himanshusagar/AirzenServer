@@ -21,7 +21,14 @@ router.post('/', function (req, res) {
     console.log(req.body);
     console.log("---------------");
     reqData["deviceId"] = req.body.deviceId;
-    
+
+    /*
+
+        YHa pe convert kr do sbke aage like
+     reqData["pm10"] =  convert_function( getIndex("pm10",req.body.pm10));
+
+     */
+
     reqData["nitrogenDioxide"] = getIndex("nitrogenDioxide",req.body.nitrogenDioxide);
     reqData["ozone"] = getIndex("ozone",req.body.ozone);
     reqData["pm10"] = getIndex("pm10",req.body.pm10);
@@ -30,6 +37,9 @@ router.post('/', function (req, res) {
     reqData["humidity"]=req.body.humidity;
     reqData["temperature"]=req.body.temperature;
     reqData["location"] = req.body.location;
+
+    databaseJS.addToDump(reqData);
+    
     databaseJS.dbInsertLatest(reqData);
     console.log("---------------------------------------------");
     console.log(reqData);

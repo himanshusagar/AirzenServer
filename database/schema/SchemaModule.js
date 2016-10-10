@@ -38,7 +38,6 @@ var EntrySchema = new Schema({
     val : Number
 })
 
-
 var pastHourSchema = new Schema({
 
     regId : Schema.Types.ObjectId,
@@ -107,12 +106,27 @@ var registrationSchema = new Schema({
     token : { type:String , unique:true },
     emailId : String,
     regDate : Date,
-    
-
-
 
 
 })
+
+var dataDumpSchema = new Schema({
+
+    deviceId : String,
+    nitrogenDioxide : String,
+    ozone : String,
+    pm25 : String,
+    pm10 : String,
+    carbonMonoxide : String,
+    humidity : String,
+    temperature : String,
+    aqi :String,
+    location : String,
+    date : String
+})
+
+
+
 
 var healthRiskSchema = new Schema({
 
@@ -135,6 +149,7 @@ var pastMonthModel = mongoose.model('pastMonth' , pastMonthSchema , constants.pa
 var monthlyModel = mongoose.model('monthly' , monthlySchema ,constants.monthly);
 var devicesModel  = mongoose.model('devices' , DevicesSchema , constants.devices);
 var usersModel = mongoose.model('user' , UsersSchema , constants.users);
+var dataDumpModel = mongoose.model('dataDump' , dataDumpSchema , constants.dataDump);
 
 
 registrationSchema.post('save' , function (doc)
@@ -518,7 +533,8 @@ module.exports = {
     pastMonthModel : pastMonthModel,
     monthlyModel : monthlyModel,
     devicesModel : devicesModel,
-    usersModel : usersModel
+    usersModel : usersModel,
+    dataDumpModel : dataDumpModel
 
 }
 

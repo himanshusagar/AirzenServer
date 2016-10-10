@@ -20,7 +20,7 @@ router.post("/", DBAuth.ensureAuthenticated, function(req, res){
 
     console.log(reqData);
 
-    sJ.getAppJson("A444",reqData["defectPreferences"],reqData["age"] ,function (err , result)
+    sJ.getAppJson( reqData["deviceId"],reqData["defectPreferences"],reqData["age"] ,function (err , result)
     {
         res.writeHead(200, {
             'Content-Type' : 'x-application/json'

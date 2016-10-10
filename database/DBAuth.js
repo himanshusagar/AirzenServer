@@ -12,11 +12,13 @@ function ensureAuthenticated(req, res, next)
 {
     req.session.InitiallyCalledAs = req.url;
     console.log(req.isAuthenticated() + req.url);
+
     if(req.isAuthenticated())
     {
         
         return next();
-    } else 
+    }
+    else
     {
         //req.flash('error_msg','You are not logged in');
         
